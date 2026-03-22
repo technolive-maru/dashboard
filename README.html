@@ -1,4 +1,3 @@
-# dashboard
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,108 +8,132 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-  background: #1a2a4a;
-  color: white;
-  font-family: sans-serif;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  background: #1a2a4a;
+  color: white;
+  font-family: sans-serif;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 #top {
-  height: 60%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  border-bottom: 1px solid rgba(255,255,255,0.15);
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 
 #bottom {
-  height: 40%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 40px;
+  height: 40%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: stretch;
+}
+
+.weather-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  padding: 0 20px;
+}
+
+.weather-panel + .weather-panel {
+  border-left: 1px solid rgba(255,255,255,0.15);
 }
 
 #clock {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 18vw;
-  color: #00e5ff;
-  text-shadow: 0 0 20px #00e5ff88, 0 0 40px #00e5ff44;
-  letter-spacing: 4px;
-  line-height: 1;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 18vw;
+  color: #00e5ff;
+  text-shadow: 0 0 20px #00e5ff88, 0 0 40px #00e5ff44;
+  letter-spacing: 4px;
+  line-height: 1;
 }
 
 #date {
-  font-size: 2vw;
-  margin-top: 12px;
-  opacity: 0.65;
-  letter-spacing: 2px;
+  font-size: 2vw;
+  margin-top: 12px;
+  opacity: 0.65;
+  letter-spacing: 2px;
 }
 
-#weather-icon {
-  font-size: 6vw;
-  line-height: 1;
+.weather-icon {
+  font-size: 5vw;
+  line-height: 1;
 }
 
-#weather-temp {
-  font-family: 'Share Tech Mono', monospace;
-  font-size: 5vw;
-  color: #00e5ff;
-  text-shadow: 0 0 10px #00e5ff66;
+.weather-temp {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 4vw;
+  color: #00e5ff;
+  text-shadow: 0 0 10px #00e5ff66;
 }
 
-#weather-info {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-#weather-label {
-  font-size: 1.4vw;
-  opacity: 0.6;
+.weather-label {
+  font-size: 1.3vw;
+  opacity: 0.6;
 }
 
-#weather-desc {
-  font-size: 1.8vw;
-  opacity: 0.8;
+.weather-desc {
+  font-size: 1.6vw;
+  opacity: 0.8;
 }
 
-#weather-sub {
-  font-size: 1.3vw;
-  opacity: 0.5;
+.weather-sub {
+  font-size: 1.2vw;
+  opacity: 0.5;
 }
 
 #sleep {
-  display: none;
-  width: 100vw;
-  height: 100vh;
-  background: black;
-  position: fixed;
-  top: 0; left: 0;
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  position: fixed;
+  top: 0; left: 0;
 }
 </style>
 </head>
 <body>
 
 <div id="top">
-  <div id="clock">--:--:--</div>
-  <div id="date">取得中...</div>
+  <div id="clock">--:--:--</div>
+  <div id="date">取得中...</div>
 </div>
 
 <div id="bottom">
-  <div id="weather-icon">:mostly_sunny:</div>
-  <div id="weather-temp">--°C</div>
-  <div id="weather-info">
-    <div id="weather-label">川崎市の天気</div>
-    <div id="weather-desc">-</div>
-    <div id="weather-sub">-</div>
-  </div>
+  <div class="weather-panel">
+    <div class="weather-icon" id="today-icon">🌤</div>
+    <div class="weather-temp" id="today-temp">--°C</div>
+    <div class="weather-info">
+      <div class="weather-label">今日の天気</div>
+      <div class="weather-desc" id="today-desc">-</div>
+      <div class="weather-sub" id="today-sub">-</div>
+    </div>
+  </div>
+  <div class="weather-panel">
+    <div class="weather-icon" id="tomorrow-icon">🌤</div>
+    <div class="weather-temp" id="tomorrow-temp">--°C</div>
+    <div class="weather-info">
+      <div class="weather-label">明日の天気</div>
+      <div class="weather-desc" id="tomorrow-desc">-</div>
+      <div class="weather-sub" id="tomorrow-sub">-</div>
+    </div>
+  </div>
 </div>
 
 <div id="sleep"></div>
@@ -119,56 +142,90 @@ body {
 const WEEKDAYS = ['日','月','火','水','木','金','土'];
 
 function getWeatherEmoji(id) {
-  if (id >= 200 && id < 300) return '⛈';
-  if (id >= 300 && id < 400) return '🌦';
-  if (id >= 500 && id < 600) return '🌧';
-  if (id >= 600 && id < 700) return '❄️';
-  if (id >= 700 && id < 800) return '🌫';
-  if (id === 800) return '☀️';
-  if (id === 801) return '🌤';
-  if (id === 802) return '⛅';
-  if (id >= 803) return ':cloud:';
-  return ':thermometer:';
+  if (id >= 200 && id < 300) return '⛈';
+  if (id >= 300 && id < 400) return '🌦';
+  if (id >= 500 && id < 600) return '🌧';
+  if (id >= 600 && id < 700) return '❄️';
+  if (id >= 700 && id < 800) return '🌫';
+  if (id === 800) return '☀️';
+  if (id === 801) return '🌤';
+  if (id === 802) return '⛅';
+  if (id >= 803) return '☁️';
+  return '🌡';
 }
 
 setInterval(()=>{
-  const now = new Date();
-  document.getElementById("clock").innerText =
-    now.toLocaleTimeString('ja-JP', { hour12: false });
-  const d = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日（${WEEKDAYS[now.getDay()]}）`;
-  document.getElementById("date").innerText = d;
+  const now = new Date();
+  document.getElementById("clock").innerText =
+    now.toLocaleTimeString('ja-JP', { hour12: false });
+  const d = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日（${WEEKDAYS[now.getDay()]}）`;
+  document.getElementById("date").innerText = d;
 }, 1000);
 
 const API_KEY = "edit";
 
 function updateWeather(){
-  fetch(`https://api.openweathermap.org/data/2.5/weather?q=Kawasaki,jp&appid=${API_KEY}&units=metric&lang=ja`)
-  .then(r=>r.json())
-  .then(data=>{
-    const temp = Math.round(data.main.temp);
-    const tmax = Math.round(data.main.temp_max);
-    const tmin = Math.round(data.main.temp_min);
-    const hum  = data.main.humidity;
-    const id   = data.weather[0].id;
-    const desc = data.weather[0].description;
-    document.getElementById("weather-icon").innerText = getWeatherEmoji(id);
-    document.getElementById("weather-temp").innerText = `${temp}°C`;
-    document.getElementById("weather-desc").innerText = desc;
-    document.getElementById("weather-sub").innerText  = `最高 ${tmax}°C　最低 ${tmin}°C　湿度 ${hum}%`;
-  })
-  .catch(()=>{
-    document.getElementById("weather-desc").innerText = "天気取得失敗";
-  });
+  // 今日の天気
+  fetch(`https://api.openweathermap.org/data/2.5/weather?q=Kawasaki,jp&appid=${API_KEY}&units=metric&lang=ja`)
+  .then(r=>r.json())
+  .then(data=>{
+    const temp = Math.round(data.main.temp);
+    const tmax = Math.round(data.main.temp_max);
+    const tmin = Math.round(data.main.temp_min);
+    const hum  = data.main.humidity;
+    const id   = data.weather[0].id;
+    const desc = data.weather[0].description;
+    document.getElementById("today-icon").innerText = getWeatherEmoji(id);
+    document.getElementById("today-temp").innerText = `${temp}°C`;
+    document.getElementById("today-desc").innerText = desc;
+    document.getElementById("today-sub").innerText  = `最高 ${tmax}°C　最低 ${tmin}°C　湿度 ${hum}%`;
+  })
+  .catch(()=>{
+    document.getElementById("today-desc").innerText = "取得失敗";
+  });
+
+  // 明日の天気（5日予報から翌日正午のデータを取得）
+  fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Kawasaki,jp&appid=${API_KEY}&units=metric&lang=ja`)
+  .then(r=>r.json())
+  .then(data=>{
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowDate = tomorrow.toISOString().slice(0, 10);
+
+    // 明日の予報から正午に最も近いものを選ぶ
+    const list = data.list.filter(item => item.dt_txt.startsWith(tomorrowDate));
+    if (list.length === 0) return;
+
+    const noon = list.reduce((prev, curr) => {
+      const ph = new Date(prev.dt_txt).getHours();
+      const ch = new Date(curr.dt_txt).getHours();
+      return Math.abs(ch - 12) < Math.abs(ph - 12) ? curr : prev;
+    });
+
+    const temp = Math.round(noon.main.temp);
+    const tmax = Math.round(Math.max(...list.map(i => i.main.temp_max)));
+    const tmin = Math.round(Math.min(...list.map(i => i.main.temp_min)));
+    const id   = noon.weather[0].id;
+    const desc = noon.weather[0].description;
+
+    document.getElementById("tomorrow-icon").innerText = getWeatherEmoji(id);
+    document.getElementById("tomorrow-temp").innerText = `${temp}°C`;
+    document.getElementById("tomorrow-desc").innerText = desc;
+    document.getElementById("tomorrow-sub").innerText  = `最高 ${tmax}°C　最低 ${tmin}°C`;
+  })
+  .catch(()=>{
+    document.getElementById("tomorrow-desc").innerText = "取得失敗";
+  });
 }
 updateWeather();
 setInterval(updateWeather, 600000);
 
 function updateDisplay(){
-  const now = new Date();
-  const h = now.getHours();
-  const m = now.getMinutes();
-  const off = (h === 23 && m >= 50) || h < 5;
-  document.getElementById("sleep").style.display = off ? "block" : "none";
+  const now = new Date();
+  const h = now.getHours();
+  const m = now.getMinutes();
+  const off = (h === 23 && m >= 50) || h < 5;
+  document.getElementById("sleep").style.display = off ? "block" : "none";
 }
 setInterval(updateDisplay, 60000);
 updateDisplay();
