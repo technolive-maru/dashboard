@@ -162,10 +162,9 @@ setInterval(()=>{
   document.getElementById("date").innerText = d;
 }, 1000);
 
-const API_KEY = "edit";
+const API_KEY = "***";
 
 function updateWeather(){
-  // 今日の天気
   fetch(`https://api.openweathermap.org/data/2.5/weather?q=Kawasaki,jp&appid=${API_KEY}&units=metric&lang=ja`)
   .then(r=>r.json())
   .then(data=>{
@@ -184,7 +183,6 @@ function updateWeather(){
     document.getElementById("today-desc").innerText = "取得失敗";
   });
 
-  // 明日の天気（5日予報から翌日正午のデータを取得）
   fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Kawasaki,jp&appid=${API_KEY}&units=metric&lang=ja`)
   .then(r=>r.json())
   .then(data=>{
@@ -192,7 +190,6 @@ function updateWeather(){
     tomorrow.setDate(tomorrow.getDate() + 1);
     const tomorrowDate = tomorrow.toISOString().slice(0, 10);
 
-    // 明日の予報から正午に最も近いものを選ぶ
     const list = data.list.filter(item => item.dt_txt.startsWith(tomorrowDate));
     if (list.length === 0) return;
 
